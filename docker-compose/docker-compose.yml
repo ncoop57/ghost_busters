@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  webui:
+    container_name: webui
+    image: nathancooper/ghost_busters:webui
+    build:
+      context: ../
+      dockerfile: ./webui-ms/Dockerfile.development
+
+  users-db:
+    container_name: users-db
+    image: mongo
+
+  auth:
+    container_name: auth
+    image: nathancooper/ghost_busters:auth
+    build:
+      context: ../
+      dockerfile: ./auth-ms/Dockerfile.development
+    volumes:
+      - ../auth-ms:/home/auth/
+
+  reverse-proxy:
+    image: nathancooper/ghost_busters:reverse_proxy
+    build:
+      context: ../
+      dockerfile: ./reverse-proxy/Dockerfile
+    ports:
+      - "80:80"

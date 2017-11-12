@@ -1,0 +1,18 @@
+{
+  "name": "auth-ms",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Microservice for handling the authentication of a user to other microservices",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "latest",
+    "models": "file:./models",
+    "cookie-parser": "latest",
+    "express": "^4.15.3",
+    "jsonwebtoken": "latest",
+    "mongoose": "^4.11.5"
+  }
+}
