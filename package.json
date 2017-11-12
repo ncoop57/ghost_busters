@@ -1,0 +1,14 @@
+{
+  "name": "ghost_busters",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "latest",
+    "ejs": "~2.5.6",
+    "express": "~4.15.2"
+  }
+}
