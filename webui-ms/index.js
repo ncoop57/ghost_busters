@@ -1,8 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
+const request = require('request');
+
+const jwt = require('jsonwebtoken');
+const secret = 'my_secret';
+
 router.get('/', function(req, res) {
-    res.render('index');
+    let email = req.cookies.email;
+
+    if (email) {
+	email = email.split('@')[0];
+	res.render('index', { user: email });
+    }
+    else {
+	res.render('index', { user: 'Guest' });
+    }
+});
+
+router.get('/contact', function(req, res) {
+    res.render('contact');
 });
 
 let weapons = ['Proton Pack'];
@@ -25,7 +42,7 @@ router.get('/detection', function(req, res) {
     res.render('category', {'equipment': detections});
 });
 
-router.get('/cart', function(req, res) {
+router.get('/cart', isLoggedIn, function(req, res) {
     let cookie = req.cookies.cart;
     if (!cookie) cookie = {cart: []};
     else cookie = JSON.parse(cookie);
@@ -33,6 +50,14 @@ router.get('/cart', function(req, res) {
     res.cookie('cart', JSON.stringify(cookie));
     res.render('cart', {cart: cookie.cart});
 
+});
+
+router.get('/login', function(req, res) {
+    res.render('login');
+});
+
+router.get('/signup', function(req, res) {
+    res.render('signup');
 });
 
 router.post('/cart/purchase', function(req, res) {
@@ -66,5 +91,42 @@ router.post('/cart/remove', function(req, res) {
     res.cookie('cart', JSON.stringify(cookie));
     res.json(cookie);
 });
+
+router.post('/users/signup', function(req, res) {
+    console.log("User: ", req.body);
+    request.post('http://users/signup', {json: req.body}, function(error, response, body) {
+	if (!error && response.statusCode == 200) {
+	    console.log(body);
+	    res.send("success");
+	}
+    });
+});
+
+router.post('/auth/login', function(req, res) {
+    console.log('Logging in', req.body);
+    request.post('http://auth/login', {json: req.body}, function(error, response, body) {
+	if (!error && response.statusCode == 200) {
+	    console.log(body);
+	    res.cookie('token', body.token); 
+	    res.cookie('email', body.email);
+	    res.json(body);
+	}
+    });
+});
+
+function isLoggedIn (req, res, next) {
+    const token = req.cookies.token;
+    if (token) {
+        jwt.verify(token, secret, function(err, decoded) {
+            if (err) {
+                return res.redirect('/login');
+            } else {
+                return next();
+            }
+        });
+    } else {
+        res.redirect('/login');
+    }
+}
 
 module.exports = router;

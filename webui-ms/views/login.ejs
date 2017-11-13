@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+    <head>
+
+        <% include partials/head %>
+
+    </head>
+    <body>
+        <div class="container">
+            <% include partials/header %>
+            <% include partials/nav %>
+
+	    <div class "container">
+	    
+		<div class="jumbotron">
+		    <form id="form">
+
+			<div class="form-group">
+			    <label for="email">Email address:</label>
+			    <input type="email" class="form-control" name="email">
+			</div>
+
+	                <div class="form-group">
+			    <label for="pwd">Password:</label>
+			    <input type="password" class="form-control" name="password">
+			</div>
+
+			<input id="submit" type="button" class="btn btn-default" value="submit"></input>
+            
+		    </form>
+		</div>
+		<hr>
+		<p>Need an account? <a href="/signup">Signup</a></p>
+	    </div>
+
+            <% include partials/footer %>
+        </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type='text/javascript'>
+
+	$(document).ready(function() {
+	    $("#submit").on('click', function() {
+		var user = {};
+		$.each($("#form").serializeArray(), function(i, field){
+		    user[field.name] = field.value;
+		});
+		console.log(JSON.stringify(user));
+		$.ajax({
+		    url: '/auth/login',
+		    type:'POST',
+		    dataType: 'json',
+		    data: JSON.stringify(user),
+		    success: function(result, status, xhr) {
+			console.log(result);
+			window.location = '/'//?email=' + result.email;
+		    },
+		    error: function(xhr, status, error) {
+			console.log(error);
+		    },
+		    contentType: "application/json"
+	        });
+	    });
+        });
+
+    </script>
+
+    </body>
+</html>

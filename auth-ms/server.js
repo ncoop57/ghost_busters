@@ -8,7 +8,8 @@ const cookie = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 
 const User = require('models/user');
-const mongoose = require('mongodb://users-db/users');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://users-db/users');
 
 app.use(body.json());
 app.use(cookie());
@@ -19,7 +20,7 @@ const secret = 'my_secret';
 app.post('/login', async function(req, res) {
     const {email, password} = req.body;
     console.log('User:', req.body);
-    const auth_user = await user.authenticate(email, password);
+    const auth_user = await User.authenticate(email, password);
 
     let data = {};
     if (auth_user)

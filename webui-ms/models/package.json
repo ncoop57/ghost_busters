@@ -1,0 +1,9 @@
+{
+  "name": "models",
+  "version": "0.0.0",
+  "description": "Schema models for various db objects",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "mongoose": "^4.11.5"
+  }
+}

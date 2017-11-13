@@ -1,0 +1,16 @@
+{
+  "name": "users-ms",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Microservice for handling the user db requests and logic",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "latest",
+    "models": "file:./models",
+    "express": "^4.15.3",
+    "mongoose": "^4.11.5"
+  }
+}

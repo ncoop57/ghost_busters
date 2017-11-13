@@ -7,6 +7,10 @@ services:
     build:
       context: ../
       dockerfile: ./webui-ms/Dockerfile.development
+    volumes:
+      - ../webui-ms:/home/webui/
+    depends_on:
+      - users-db
 
   users-db:
     container_name: users-db
@@ -20,11 +24,26 @@ services:
       dockerfile: ./auth-ms/Dockerfile.development
     volumes:
       - ../auth-ms:/home/auth/
+    depends_on:
+      - users-db
 
-  reverse-proxy:
+  users:
+    container_name: users
+    image: nathancooper/ghost_busters:users
+    build:
+      context: ../
+      dockerfile: ./users-ms/Dockerfile.development
+    volumes:
+      - ../users-ms:/home/users/
+    depends_on:
+      - users-db
+
+  reverse_proxy:
     image: nathancooper/ghost_busters:reverse_proxy
     build:
       context: ../
-      dockerfile: ./reverse-proxy/Dockerfile
+      dockerfile: ./reverse_proxy/Dockerfile
     ports:
       - "80:80"
+    depends_on:
+      - webui
